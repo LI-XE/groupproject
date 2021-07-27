@@ -6,7 +6,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import com.codingdojo.magictouch.models.User;
-import com.codingdojo.magictouch.respositories.UserRepository;
+import com.codingdojo.magictouch.repositories.UserRepository;
 
 
 
@@ -28,7 +28,7 @@ public class UserValidator implements Validator {
         	errors.rejectValue("email", "Unique");
         }
         
-        if (!user.getConfirmPassword().equals(user.getPassword())) {
+        if (!user.getPasswordConfirmation().equals(user.getPassword())) {
             errors.rejectValue("passwordConfirmation", "Match");
         }         
     }
