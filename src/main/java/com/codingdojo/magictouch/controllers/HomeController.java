@@ -1,5 +1,7 @@
 package com.codingdojo.magictouch.controllers;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -18,11 +20,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.codingdojo.magictouch.models.Category;
 import com.codingdojo.magictouch.models.Comment;
+import com.codingdojo.magictouch.models.Ingredient;
 import com.codingdojo.magictouch.models.Recipe;
+import com.codingdojo.magictouch.models.Step;
 import com.codingdojo.magictouch.models.User;
 import com.codingdojo.magictouch.services.CategoryService;
 import com.codingdojo.magictouch.services.CommentService;
+import com.codingdojo.magictouch.services.IngredientService;
 import com.codingdojo.magictouch.services.RecipeService;
+import com.codingdojo.magictouch.services.StepService;
 import com.codingdojo.magictouch.services.UserService;
 import com.codingdojo.magictouch.validators.UserValidator;
 
@@ -36,9 +42,15 @@ public class HomeController {
 	@Autowired
 	private RecipeService rService;
 	@Autowired
-	private UserValidator validator;
+	private StepService sService;
 	@Autowired
-	private CommentService cService;
+	private CommentService commentService;
+	@Autowired
+	private IngredientService iService;
+	@Autowired
+	private UserValidator validator;
+	
+	
 	
 	// register, login, logout
 		@GetMapping("/")
@@ -54,7 +66,7 @@ public class HomeController {
 			}
 			User newUser = this.uService.registration(user);
 			session.setAttribute("user__id", newUser.getId());
-			return "redirect:/recipes";
+			return "redirect:/home";
 		}
 		
 		@PostMapping("/login")
@@ -65,7 +77,7 @@ public class HomeController {
 			}
 			User user = this.uService.FindByEmail(email);
 			session.setAttribute("user__id", user.getId());
-			return "redirect:/recipes";
+			return "redirect:/home";
 		}
 		
 		@GetMapping("/logout")
@@ -76,80 +88,163 @@ public class HomeController {
 		
 	// index
 	@GetMapping("/home")
-	public String index(HttpSession session, Model model) {
+	public String home(HttpSession session, Model model, String keyword) {
+		
 		Long userId = (Long) session.getAttribute("user__id");
 		User user = this.uService.findById(userId);
 		List<Recipe> recipes = this.rService.allRecipes();
 		List<Category> categories = this.cateService.allCategories();
+		List<Comment> comments = this.commentService.allComments();
 		model.addAttribute("recipes", recipes);
 		model.addAttribute("categories", categories);
 		model.addAttribute("user", user);
+		model.addAttribute("comments", comments);
+		
+		if(keyword != null) {
+			model.addAttribute("recipes", rService.findByKeyword(keyword));
+		}
+		else
+		{
+			model.addAttribute("recipes", rService.allRecipes());
+		}
 		return "home.jsp";
 	}
 	
-	// get one recipe
-	@GetMapping("/recipes")
-	public String showRecipe( Model model, HttpSession session) {
-
-
+	// new recipe
+	@GetMapping("/recipes/new")
+	public String addRecipe(@ModelAttribute("recipe") Recipe recipe, @ModelAttribute("ingredients") Ingredient ingredient,  @ModelAttribute("steps") Step step, HttpSession session, Model model) {
+//		if(session.getAttribute("user_id") == null) {
+//			return "redirect:/";
+//		}
+		Long userId = (Long) session.getAttribute("user__id");
+		User user = this.uService.FindOneUser(userId);
+		model.addAttribute("recipe", recipe);
+		model.addAttribute("ingredients", ingredient);
+		model.addAttribute("steps", step);
+		model.addAttribute("user", user);
 		return "RecipeCreator.jsp";
 	}
 	
+	@PostMapping("/recipes/new")
+	public String createRecipe(@Valid @ModelAttribute("recipe") Recipe recipe, @ModelAttribute("ingredients") Ingredient ingredient,  @ModelAttribute("steps") Step step, BindingResult result, HttpSession session) {
+		Long userId = (Long) session.getAttribute("user__id");
+		User user = this.uService.FindOneUser(userId);
+		if(result.hasErrors()) {
+			return "RecipeCreator.jsp";
+		}
+		recipe.setAuthor(user);
+		this.rService.newRecipe(recipe);
+		return "redirect:/myrecipes";
+	}
 	
-//	@GetMapping("/recipes/id")
-//	public String showRecipe(@PathVariable("id") Long id, Model model, HttpSession session) {
-//		Long userId = (Long) session.getAttribute("user__id");
-//		User user = this.uService.FindOneUser(userId);
-//		model.addAttribute("recipe", this.rService.FindOneRecipe(id));
-//		model.addAttribute("user", user);
-//		return "RecipeCreator.jsp";
-//	}
-//	
-//	// new recipe
-//	@GetMapping("/recipes/new")
-//	public String addRecipe(@ModelAttribute("newRecipe") Recipe recipe, HttpSession session, Model model) {
-//		Long userId = (Long) session.getAttribute("user__id");
-//		User user = this.uService.FindOneUser(userId);
-//		model.addAttribute("recipe", recipe);
-//		return "RecipeCreator.jsp";
-//	}
-//	
-//	@PostMapping("/recipes/new")
-//	public String createRecipe(@Valid @ModelAttribute("recipe") Recipe recipe, BindingResult result, HttpSession session) {
-//		Long userId = (Long) session.getAttribute("user__id");
-//		User user = this.uService.FindOneUser(userId);
-//		if(result.hasErrors()) {
-//			return "RecipeCreator.jsp";
-//		}
-//		recipe.setAuthor(user);
-//		this.rService.newRecipe(recipe);
-//		return "redirect:/myrecipes";
-//	}
-//	
+	// get one recipe
+	@GetMapping("/recipes/{id}")
+	public String showRecipe(@PathVariable("id") Long id, @ModelAttribute("comment") Comment comment, Model model, HttpSession session) {
+		Long userId = (Long) session.getAttribute("user__id");
+		User user = this.uService.FindOneUser(userId);
+		Recipe this_recipe = this.rService.FindOneRecipe(id);
+		List<Comment> comments = this.commentService.allComments();
+		model.addAttribute("recipe", this_recipe);
+		model.addAttribute("user", user);
+		model.addAttribute("comments", comments);
+		
+		Date date = new Date();
+		SimpleDateFormat dt = new SimpleDateFormat("dd MMMM YYYY h:mma");
+		model.addAttribute("currentTime", dt.format(date));
+		return "showRecipe.jsp";
+	}
+	
+	// delete recipe
 	@GetMapping("/recipes/delete/{id}")
 	public String deleteRecipe(@PathVariable("id") Long id) {
 		this.rService.delete(id);;
 		return "redirect:/myrecipes";
 	}
-
-	@GetMapping("/recipes/new")
-	public String createRecipe(@ModelAttribute("recipe") Recipe recipe, HttpSession session, Model model) {
+	
+	// my recipes
+	@GetMapping("/myrecipes")
+	public String myrecipes(HttpSession session, Model model) {
 		Long userId = (Long) session.getAttribute("user__id");
 		User user = this.uService.FindOneUser(userId);
-		model.addAttribute("recipe", recipe);
-		return "addRecipe.jsp";
+		List<Recipe> recipes = this.rService.allRecipes();
+		model.addAttribute("user", user);
+		model.addAttribute("recipes", recipes);
+		return "MyRecipe.jsp";
 	}
 	
-	@PostMapping("/recipes/new")
-	public String addRecipe(@Valid @ModelAttribute("recipe") Recipe recipe, BindingResult result, HttpSession session) {
+	
+	// continue add ingredients
+		@GetMapping("/recipes/{id}/addingredients")
+		public String addIngredients(@PathVariable("id") Long id, @ModelAttribute("recipe") Recipe recipe, @ModelAttribute("ingredients") Ingredient ingredient,  @ModelAttribute("steps") Step step, HttpSession session, Model model) {
+			Long userId = (Long) session.getAttribute("user__id");
+			User user = this.uService.FindOneUser(userId);
+			Recipe this_recipe = this.rService.FindOneRecipe(id);
+			model.addAttribute("recipe", this_recipe);
+			model.addAttribute("ingredients", ingredient);
+			model.addAttribute("user", user);
+			return "addingredients.jsp";
+		}
+		
+		@PostMapping("/recipes/{id}/addingredients")
+		public String createIngredients(@PathVariable("id") Long id, @Valid @ModelAttribute("recipe") Recipe recipe, @ModelAttribute("ingredients") Ingredient ingredient,  @ModelAttribute("steps") Step step, BindingResult result, HttpSession session, Model model) {
+			Long userId = (Long) session.getAttribute("user__id");
+			User user = this.uService.FindOneUser(userId);
+			Recipe this_recipe = this.rService.FindOneRecipe(id);
+			model.addAttribute("recipe", this_recipe);
+			model.addAttribute("ingredients", ingredient);
+			model.addAttribute("user", user);
+			if(result.hasErrors()) {
+				return "addingredients.jsp";
+			}
+			ingredient.setRecipe(recipe);
+			this.iService.newIngredient(ingredient);
+			return "redirect:/recipes/{id}/addingredients";
+		}
+	
+		// continue add steps
+		@GetMapping("/recipes/{id}/addsteps")
+		public String addSteps(@PathVariable("id") Long id, @ModelAttribute("recipe") Recipe recipe, @ModelAttribute("ingredients") Ingredient ingredient,  @ModelAttribute("steps") Step step, HttpSession session, Model model) {
+			Long userId = (Long) session.getAttribute("user__id");
+			User user = this.uService.FindOneUser(userId);
+			Recipe this_recipe = this.rService.FindOneRecipe(id);
+			model.addAttribute("recipe", this_recipe);
+			model.addAttribute("steps", step);
+			model.addAttribute("user", user);
+			return "addsteps.jsp";
+		}
+		
+		@PostMapping("/recipes/{id}/addsteps")
+		public String createSteps(@PathVariable("id") Long id, @Valid @ModelAttribute("recipe") Recipe recipe, @ModelAttribute("steps") Step step, BindingResult result, HttpSession session, Model model) {
+			Long userId = (Long) session.getAttribute("user__id");
+			User user = this.uService.FindOneUser(userId);
+			Recipe this_recipe = this.rService.FindOneRecipe(id);
+			model.addAttribute("recipe", this_recipe);
+			model.addAttribute("steps", step);
+			model.addAttribute("user", user);
+			if(result.hasErrors()) {
+				return "addsteps.jsp";
+			}
+			step.setRecipe(recipe);
+			this.sService.newStep(step);
+			return "/recipes/{id}/addsteps";
+		}
+	
+	
+	@PostMapping("/recipes/{id}/comment")
+	public String createComment(@PathVariable("id") Long id, @Valid @ModelAttribute("comment") Comment comment, BindingResult result, HttpSession session, Model model) {
 		Long userId = (Long) session.getAttribute("user__id");
 		User user = this.uService.FindOneUser(userId);
+		Recipe this_recipe = this.rService.FindOneRecipe(id);
+		model.addAttribute("recipe", this_recipe);
+		model.addAttribute("comment", comment);
+		model.addAttribute("user", user);
 		if(result.hasErrors()) {
-			return "addRecipe.jsp";
+			return "showRecipe.jsp";
 		}
-		recipe.setAuthor(user);
-		this.rService.newRecipe(recipe);
-		return "redirect:/myrecipes";
+		comment.setRecipe(this_recipe);
+		comment.setCommentPoster(user);
+		this.commentService.newComment(comment);
+		return "/recipes/{id}";
 	}
 	
 	@GetMapping("/like/{id}")
@@ -159,7 +254,7 @@ public class HomeController {
 		User liker = this.uService.findById(userId);
 		Recipe likedRecipe = this.rService.FindOneRecipe(recipeId);
 		this.rService.addLiker(liker, likedRecipe);
-		return "redirect:/recipes";
+		return "redirect:/home";
 	}
 	
 	@GetMapping("/unlike/{id}")
@@ -169,31 +264,8 @@ public class HomeController {
 		User liker = this.uService.findById(userId);
 		Recipe likedRecipe = this.rService.FindOneRecipe(recipeId);
 		this.rService.removeLiker(liker, likedRecipe);
-		return "redirect:/recipes";
+		return "redirect:/home";
 	}
 	
-	@GetMapping("/recipes/comment/new")
-	public String createComment(@PathVariable("id") Long id, @ModelAttribute("comment") Comment comment, HttpSession session, Model model) {
-//		Long userId = (Long) session.getAttribute("user__id");
-//		User user = this.uService.FindOneUser(userId);
-//		Long recipeId = id;
-//		Recipe recipe = this.rService.FindOneRecipe(recipeId);
-		model.addAttribute("comment", comment);
-		return "addRecipe.jsp";
-	}
 	
-	@PostMapping("/recipes/comment/new")
-	public String addRecipe(@PathVariable("id") Long id, @Valid @ModelAttribute("comment") Comment comment, BindingResult result, HttpSession session) {
-//		Long userId = (Long) session.getAttribute("user__id");
-//		User user = this.uService.FindOneUser(userId);
-//		Long recipeId = id;
-//		Recipe recipe = this.rService.FindOneRecipe(recipeId);
-		if(result.hasErrors()) {
-			return "addComment.jsp";
-		}
-//		comment.setCommentPoster(user);
-//		comment.setRecipe(recipe);
-		this.cService.newComment(comment);
-		return "redirect:/recipes/";
-	}
 }

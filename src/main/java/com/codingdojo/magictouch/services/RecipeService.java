@@ -39,13 +39,15 @@ public class RecipeService {
 		List<User> likers = recipe.getLikers();
 		likers.add(user);
 		this.RRepo.save(recipe);
-		
 	}
 
 	public void removeLiker(User user, Recipe recipe) {
 		List<User> likers = recipe.getLikers();
 		likers.remove(user);
 		this.RRepo.save(recipe);
-		
+	}
+	
+	public List<Recipe> findByKeyword(String keyword){
+		return RRepo.findByKeyword(keyword);
 	}
 }

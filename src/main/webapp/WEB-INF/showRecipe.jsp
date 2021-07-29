@@ -13,10 +13,8 @@
 <body>
 	<div class="container">
 		<div class="header">
-			<h1>Magic Touch</h1>
+			<a href="/home"><h1>Magic Touch</h1></a>
 			<div class="pt-2">
-				<a href="/">Sign In</a>
-				<a href="/">Sign Up</a>
 				<a href="/">Logout</a>
 			</div>
 		</div>
@@ -31,32 +29,48 @@
 				</div>
 			</div>
 			<div class="recipe">
-				<h1>Recipe Name: ${ recipe.name }</h1>
+				<h1>Recipe Name: ${ recipe.title }</h1>
 				<div class="recipe_img mt-3">Image</div>
 				<ul class="info d-flex justfity-content-around ">
 					<li class="menu mx-5"><p>Comments:${ recipe.comments.size() }</p></li>
-					<li class="menu mx-5"><p>Followed: ${ recipe.followingRecipe.size() }</p></li>
+					<%-- <li class="menu mx-5"><p>Followed: ${ recipe.followingRecipe.size() }</p></li> --%>
 					<li class="menu mx-5"><p>Likes: ${ recipe.likers.size() }</p></li>
 				</ul>
-				<h5>Author: ${ recipe.author.getUsername }</h5>
+				<h5>Author: ${ recipe.author.username }</h5>
 				<p><span>Description:</span> ${ recipe.description }</p>
+				<div class="row">
+				<p class="d-inline col-3"><span>Ingredinets: </span> 
+				<div class="d-inline col-6">
+					<c:forEach items="${ recipe.ingredients }" var="ingredient">
+						<p>${ ingredient.name } - ${ ingredient.amount }</p>	
+					</c:forEach>
+				</div>
+				</div>
 				<c:forEach items="${ recipe.steps }" var="step">
 					<p><span>Steps:</span> ${ recipe.step }</p>
 				</c:forEach>
 				<hr>
 				<div>
-					<form:form method="POST" action="/recipes/comment/new" modelAttribute="comment">
+					<form:form method="POST" action="/recipes/${recipe.id}/comment" modelAttribute="comment">
 					    <p>
 				            <form:label path="comment">Comment:</form:label>
 				            <form:errors path="comment"/>
 				            <form:input path="comment"/>
 				     
 				        </p>
-				        <input type="submit" value="Create"/>
+				        <input type="submit" class="btn btn-primary" value="Post"/>
 					</form:form>
-				</div>
-				
-				
+					<div>
+						<c:forEach items="${ recipe.comments }" var="comment">
+							<div>
+								<p>${ comment.comment }</p>
+								<p>${ currentTime }
+								<p>posted by: ${ comment.CommentPoster.username }</p>
+							</div>
+							
+						</c:forEach>
+					</div>
+				</div>			
 			</div>
 		</div>
 	</div>

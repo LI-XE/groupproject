@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -28,8 +28,8 @@ public class Ingredient {
 	@Size(min=3)
 	private String name;
 	
-	@NotNull
-	private Integer amount;
+	@NotBlank
+	private String amount;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="recipe_id")
@@ -73,11 +73,11 @@ public class Ingredient {
 		this.name = name;
 	}
 
-	public Integer getAmount() {
+	public String getAmount() {
 		return amount;
 	}
 
-	public void setAmount(Integer amount) {
+	public void setAmount(String amount) {
 		this.amount = amount;
 	}
 

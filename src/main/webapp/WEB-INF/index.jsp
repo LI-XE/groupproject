@@ -1,24 +1,28 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="ISO-8859-1">	
-<title>Register Login</title>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+<meta charset="ISO-8859-1">
+<title>My Recipe</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 </head>
-<body>
-	<div class="container my-5">
-		<div class="row">
+	<div class="container">
+		<div class="header">
+			<a href="/home"><h1>Magic Touch</h1></a>
+		</div>
+		<div class="content">
+		<div class="row center">
 			<div class="col">
 				<h1>Register!</h1>
 			    <form:form method="POST" action="/registration" modelAttribute="user">
 			    <p>
-		            <form:label path="name">Name:</form:label>
-		            <form:errors path="name"/>
-		            <form:input path="name"/>
+		            <form:label path="username">Name:</form:label>
+		            <form:errors path="username"/>
+		            <form:input path="username"/>
 		        </p>
 		        <p>
 		            <form:label path="email">Email:</form:label>
@@ -52,6 +56,7 @@
 			        <input type="submit" value="Login"/>
 			    </form>
 			</div>
+		</div>
 		</div>
 	</div>
 </body>

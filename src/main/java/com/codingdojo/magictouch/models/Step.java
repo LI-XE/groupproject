@@ -30,7 +30,7 @@ public class Step {
 	@Size(min=3)
 	private String description;
 	
-	@Column(nullable = false, length = 64)
+	@Column(nullable = true, length = 64)
     private String photo;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
