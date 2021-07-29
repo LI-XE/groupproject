@@ -30,13 +30,19 @@
 				</div>
 			</div>
 			<div>
-				<h2> Ingredients </h2>
+				<h1 class="m-5 border-bottom pb-3">${recipe.title}</h1>
+				<h2> Steps </h2>
 				<div>
 				<form:form  action="/recipes/${recipe.id}/addsteps" method="post" modelAttribute="steps">	
 					<div>
 					    <form:label path="name">Name</form:label>
 					    <form:errors path="name"/>
 					    <form:input path="name"/>
+					    </div>
+					    <div>
+					    <form:label path="photo">photo URL</form:label>
+					    <form:errors path="photo"/>
+					    <form:input path="photo" />
 					    </div>
 					    <div>
 					    <form:label path="description">description</form:label>
@@ -49,7 +55,8 @@
 				<div class="my-5">
 					<a href="/recipes/${recipe.id}/addsteps" type="button" class="btn btn-warning">Add More Steps</a>
 					<a href="/recipes/${recipe.id}/addingredients" type="button" class="btn btn-info mx-3">Add Ingredients</a>
-					<a href="/recipes/${recipe.id}" type="button" class="btn btn-success">My Recipe</a>
+					<a href="/myrecipes/edit/${recipe.id}" type="button" class="btn btn-primary">Edit Recipe</a>
+					<a href="/recipes/${recipe.id}" type="button" class="btn btn-success mx-3">My Recipe</a>
 					
 				</div>
 			</div>

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -154,6 +155,29 @@ public class HomeController {
 		return "showRecipe.jsp";
 	}
 	
+	// update recipes
+		@GetMapping("/recipes/edit/{id}")
+		public String editRecipes(@ModelAttribute("updaterecipe") Recipe recipe, HttpSession session, Model model, @PathVariable("id") Long id) {
+			Long userId = (Long) session.getAttribute("user__id");
+			User user = this.uService.FindOneUser(userId);
+			model.addAttribute("recipe", this.rService.FindOneRecipe(id));
+			return "editrecipe.jsp";
+		}
+		
+		@PutMapping("/recipes/edit/{id}")
+		public String addrecipes(@Valid @ModelAttribute("updaterecipe") Recipe recipe, BindingResult result, @PathVariable("id") Long id, Model model, HttpSession session) {
+			Long userId = (Long) session.getAttribute("user__id");
+			User user = this.uService.FindOneUser(userId);
+			if(result.hasErrors()) {
+				model.addAttribute("recipe", this.rService.FindOneRecipe(id));
+				return "editrecipe.jsp";
+			}
+			model.addAttribute("recipe", this.rService.FindOneRecipe(id));
+			model.addAttribute("user", user);
+			this.rService.editRecipe(recipe);
+			return "redirect:/myrecipes";
+		}
+	
 	// delete recipe
 	@GetMapping("/recipes/delete/{id}")
 	public String deleteRecipe(@PathVariable("id") Long id) {
@@ -226,7 +250,7 @@ public class HomeController {
 			}
 			step.setRecipe(recipe);
 			this.sService.newStep(step);
-			return "/recipes/{id}/addsteps";
+			return "redirect:/recipes/{id}/addsteps";
 		}
 	
 	

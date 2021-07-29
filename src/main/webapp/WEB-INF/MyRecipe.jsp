@@ -44,7 +44,7 @@
 						<c:forEach items="${recipes}" var="recipe">
 						<tr>
 							<td class="elements"><a href="/recipes/${recipe.id}">${recipe.title}</a></td>
-							<td class="elements"><a href="/recipes/${recipe.id}/addingredients">Add Ingredients</a> | <a href="/recipes/${recipe.id}/addsteps">Add Steps</a> | <a href="/recipes/delete/${recipe.id}">Delete</a></td>
+							<td class="elements"><a href="/recipes/edit/${ recipe.id }">Edit Recipe</a> | <a href="/recipes/${recipe.id}/addingredients">Add Ingredients</a> | <a href="/recipes/${recipe.id}/addsteps">Add Steps</a> | <a href="/recipes/delete/${recipe.id}">Delete</a></td>
 						</tr>
 						</c:forEach>
 					</tbody>

@@ -37,18 +37,30 @@
 					<li class="menu mx-5"><p>Likes: ${ recipe.likers.size() }</p></li>
 				</ul>
 				<h5>Author: ${ recipe.author.username }</h5>
-				<p><span>Description:</span> ${ recipe.description }</p>
-				<div class="row">
-				<p class="d-inline col-3"><span>Ingredinets: </span> 
+				<h3 class="my-3">Description:</h3> <p> ${ recipe.description }</p>
+				<div class="row my-3">
+				<h3 class="d-inline col-3">Ingredinets: </h3> 
 				<div class="d-inline col-6">
 					<c:forEach items="${ recipe.ingredients }" var="ingredient">
 						<p>${ ingredient.name } - ${ ingredient.amount }</p>	
 					</c:forEach>
 				</div>
 				</div>
-				<c:forEach items="${ recipe.steps }" var="step">
-					<p><span>Steps:</span> ${ recipe.step }</p>
-				</c:forEach>
+				<div class="my-3">
+					<h3>Steps: </h3>
+					<div class="d-inline col-6">
+						<c:forEach items="${ recipe.steps }" var="step">
+							<p>${ step.name }</p>
+							<div>img</div>
+							<p>${ step.description }</p>
+						</c:forEach>
+					</div>
+				</div>
+				<div>
+				<c:if test="${user.id == recipe.author.id}">
+				<a href="/myrecipes" class="btn btn-warning">Edit Recipe</a>
+				</c:if>
+				</div>
 				<hr>
 				<div>
 					<form:form method="POST" action="/recipes/${recipe.id}/comment" modelAttribute="comment">

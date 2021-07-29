@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Add ingredients</title>
+<title>Edit</title>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 <link rel="stylesheet" type="text/css" href="css/style.css">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
@@ -30,34 +30,29 @@
 			</div>
 			<div>
 				<h1 class="m-5 border-bottom pb-3">${recipe.title}</h1>
-				<h2> Ingredients </h2>
-				<div>
-					<form:form  action="/recipes/${recipe.id}/addingredients" method="post" modelAttribute="ingredients">	
-							<div>
-								<div>
-								    <form:label path="name">Name</form:label>
-								    <form:errors path="name"/>
-								    <form:input path="name"/>
-							    </div>
-							    <div>
-								    <form:label path="amount">amount</form:label>
-								    <form:errors path="amount"/>
-								    <form:input path="amount" />
-							    </div>				   
-							    <button class="btn btn-info">ADD Ingredients</button>
-							</div>		
-						</form:form >
-				</div>
-				<div class="my-5">
-					<a href="/recipes/${recipe.id}/addingredients" type="button" class="btn btn-info">Add More Ingredients</a>
-					<a href="/recipes/${recipe.id}/addsteps" type="button" class="mx-3 btn btn-warning">Add Steps</a>
-					<a href="/recipes/edit/${recipe.id}" type="button" class="btn btn-primary">Edit Recipe</a>
-					<a href="/recipes/${recipe.id}" type="button" class="mx-3 btn btn-success">My Recipe</a>
-					
-				</div>
-					
+				<h2>Edit recipe</h2>
+				<form:form  action="/recipes/edit/${ recipe.id }" method="put" modelAttribute="updaterecipe">	
+		
+					<div>
+				    <form:label path="title">Title</form:label>
+				    <form:errors path="title"/>
+				    <form:input path="title"/>
+				    </div>
+				    <div>
+				    <form:label path="photo">photo URL</form:label>
+				    <form:errors path="photo"/>
+				    <form:input path="photo" />
+				    </div>
+				    <div>
+				    <form:label path="description">Description</form:label>
+				    <form:errors path="description"/>
+				    <form:input path="description" />
+					</div>
+				   
+				    <button class="btn btn-info">Update</button>
+				</form:form >
 			</div>
 		</div>
-	</div>	
+	</div>
 </body>
-</html>
+</html>l>

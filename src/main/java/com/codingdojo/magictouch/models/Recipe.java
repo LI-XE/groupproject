@@ -36,7 +36,7 @@ public class Recipe {
 	@Column(nullable = true, length = 64)
     private String photo;
 	
-	
+	@NotBlank
 	private String description;
 	
 	@OneToMany(mappedBy="recipe", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
