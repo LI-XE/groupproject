@@ -19,7 +19,7 @@ public class FollowingRecipeService {
 	}
 	
 	public List<FollowingRecipe> allRecipes(){
-		return this.fRepo.findALL();
+		return this.fRepo.findAll();
 	}
 	
 	public FollowingRecipe newFollowingRecipe(FollowingRecipe followingRecipe) {

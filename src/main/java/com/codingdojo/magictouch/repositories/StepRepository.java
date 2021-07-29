@@ -9,6 +9,6 @@ import com.codingdojo.magictouch.models.Step;
 
 @Repository
 public interface StepRepository extends CrudRepository<Step, Long> {
-	List<Step>findALL();
+	List<Step>findAll();
 
 }

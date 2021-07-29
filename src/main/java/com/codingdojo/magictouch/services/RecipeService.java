@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.codingdojo.magictouch.models.Recipe;
+import com.codingdojo.magictouch.models.User;
 import com.codingdojo.magictouch.repositories.RecipeRepository;
 
 @Service
@@ -18,8 +19,8 @@ public class RecipeService {
 		return Recipe;
 	}
 	
-	public List<Recipe> allRecipe(){
-		return this.RRepo.findALL();
+	public List<Recipe> allRecipes(){
+		return this.RRepo.findAll();
 	}
 	
 	public Recipe newRecipe(Recipe Recipe) {
@@ -34,4 +35,17 @@ public class RecipeService {
 		 this.RRepo.deleteById(id);
 	}
 
+	public void addLiker(User user, Recipe recipe) {
+		List<User> likers = recipe.getLikers();
+		likers.add(user);
+		this.RRepo.save(recipe);
+		
+	}
+
+	public void removeLiker(User user, Recipe recipe) {
+		List<User> likers = recipe.getLikers();
+		likers.remove(user);
+		this.RRepo.save(recipe);
+		
+	}
 }

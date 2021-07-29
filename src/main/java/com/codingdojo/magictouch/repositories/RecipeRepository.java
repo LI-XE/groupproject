@@ -9,6 +9,6 @@ import com.codingdojo.magictouch.models.Recipe;
 
 @Repository
 public interface RecipeRepository extends CrudRepository<Recipe, Long> {
-	List<Recipe>findALL();
+	List<Recipe>findAll();
 
 }

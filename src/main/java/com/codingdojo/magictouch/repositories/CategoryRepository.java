@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import com.codingdojo.magictouch.models.Category;
 
 @Repository
-public interface CategoryRepository extends CrudRepository<Category, Long> {
-	List<Category>findALL();
-
+public interface CategoryRepository extends CrudRepository<Category, Long>{
+	List<Category>findAll();
 }

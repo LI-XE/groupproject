@@ -10,6 +10,6 @@ import com.codingdojo.magictouch.models.FollowingRecipe;
 
 @Repository
 public interface FollowingRecipeRepository extends CrudRepository<FollowingRecipe, Long> {
-	List<FollowingRecipe>findALL();
+	List<FollowingRecipe>findAll();
 
 }

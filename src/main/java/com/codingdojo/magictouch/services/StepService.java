@@ -15,7 +15,7 @@ public class StepService {
 	
 	
 	public List<Step> allStep(){
-		return this.sRepo.findALL();
+		return this.sRepo.findAll();
 	}
 	
 	public Step newStep(Step step) {

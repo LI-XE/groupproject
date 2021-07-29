@@ -14,7 +14,7 @@ public class CommentService {
 	private CommentRepository cRepo;
 	
 	public List<Comment> allComments(){
-		return this.cRepo.findALL();
+		return this.cRepo.findAll();
 	}
 	
 	public Comment singleComment(Long id) {

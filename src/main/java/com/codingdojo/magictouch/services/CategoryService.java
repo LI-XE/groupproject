@@ -13,13 +13,13 @@ public class CategoryService {
 	@Autowired
 	private CategoryRepository cateRepo;
 	
+	public List<Category> allCategories(){
+		return this.cateRepo.findAll();
+	}
+	
 	public Category singleCategory(Long id) {
 		Category category = this.cateRepo.findById(id).orElse(null);
 		return category;
-	}
-	
-	public List<Category> allCategory(){
-		return this.cateRepo.findALL();
 	}
 	
 	public Category newCategory(Category category) {
@@ -33,5 +33,4 @@ public class CategoryService {
 	public void delete(Long id) {
 		 this.cateRepo.deleteById(id);
 	}
-
 }

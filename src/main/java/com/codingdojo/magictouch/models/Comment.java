@@ -37,15 +37,12 @@ public class Comment {
 	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="followingrecipe_id")
-	private Recipe followingrecipe;
+	private FollowingRecipe followingrecipe;
 	
-	@ManyToMany(fetch=FetchType.LAZY)
-	@JoinTable(
-			name = "comments",
-			joinColumns = @JoinColumn(name = "comment_id"),
-			inverseJoinColumns = @JoinColumn(name = "user_id")
-			)
-	private List<User> commentPosters;
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="user_id")
+	private User commentPoster;
+	
 	
 	@ManyToMany(fetch=FetchType.LAZY)
 	@JoinTable(
@@ -99,20 +96,22 @@ public class Comment {
 		this.recipe = recipe;
 	}
 
-	public Recipe getFollowingrecipe() {
+	public FollowingRecipe getFollowingrecipe() {
 		return followingrecipe;
 	}
 
-	public void setFollowingrecipe(Recipe followingrecipe) {
+	public void setFollowingrecipe(FollowingRecipe followingrecipe) {
 		this.followingrecipe = followingrecipe;
 	}
 
-	public List<User> getCommentPosters() {
-		return commentPosters;
+	
+
+	public User getCommentPoster() {
+		return commentPoster;
 	}
 
-	public void setCommentPosters(List<User> commentPosters) {
-		this.commentPosters = commentPosters;
+	public void setCommentPoster(User commentPoster) {
+		this.commentPoster = commentPoster;
 	}
 
 	public List<User> getCommentLikers() {

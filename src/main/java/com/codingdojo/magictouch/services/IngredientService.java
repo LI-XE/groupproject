@@ -19,7 +19,7 @@ public class IngredientService {
 	}
 	
 	public List<Ingredient> allIngredients(){
-		return this.iRepo.findALL();
+		return this.iRepo.findAll();
 	}
 	
 	public Ingredient newIngredient(Ingredient ingredient) {

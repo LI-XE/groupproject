@@ -9,7 +9,7 @@ import com.codingdojo.magictouch.models.User;
 
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
-	List<User>findALL();
-	boolean existsByEmail(String email);
+	List<User> findAll();
 	User findByEmail(String email);
+	boolean existsByEmail(String email);
 }

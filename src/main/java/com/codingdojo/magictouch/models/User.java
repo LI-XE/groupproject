@@ -37,12 +37,14 @@ public class User {
 	@Email
 	@NotBlank
 	private String email;
+	
 	@Size(min=8, message="Password must be greater than 8 characters")
 	private String password;
+	
 	@Transient
 	private String passwordConfirmation;
 	
-	@OneToMany(mappedBy="user", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+	@OneToMany(mappedBy="author", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
 	private List<Recipe> recipes;
 	
 	@ManyToMany(fetch=FetchType.LAZY)
@@ -54,7 +56,7 @@ public class User {
 	private List<Recipe> likedRecipes;
 	
 	
-	@OneToMany(mappedBy="user", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+	@OneToMany(mappedBy="commentPoster", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
 	private List<Comment> comments;
 	
 	@ManyToMany(fetch=FetchType.LAZY)
@@ -65,7 +67,7 @@ public class User {
 			)
 	private List<Comment> likedComments;
 	
-	@OneToMany(mappedBy="user", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+	@OneToMany(mappedBy="followingPoster", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
 	private List<FollowingRecipe> followingRecipes;
 	
 	@ManyToMany(fetch=FetchType.LAZY)

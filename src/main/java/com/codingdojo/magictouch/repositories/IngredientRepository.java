@@ -10,6 +10,6 @@ import com.codingdojo.magictouch.models.Ingredient;
 
 @Repository
 public interface IngredientRepository extends CrudRepository<Ingredient, Long> {
-	List<Ingredient>findALL();
+	List<Ingredient>findAll();
 
 }

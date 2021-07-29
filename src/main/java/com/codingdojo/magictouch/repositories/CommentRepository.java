@@ -9,6 +9,6 @@ import com.codingdojo.magictouch.models.Comment;
 
 @Repository
 public interface CommentRepository extends CrudRepository<Comment, Long> {
-	List<Comment>findALL();
+	List<Comment>findAll();
 
 }
